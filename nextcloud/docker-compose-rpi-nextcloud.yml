@@ -12,6 +12,8 @@ services:
       - default
     volumes:
       - nextcloud:/var/www/html
+    environment: 
+      - POSTGRES_HOST=db
     env_file:
       - ./secrets.env
 
