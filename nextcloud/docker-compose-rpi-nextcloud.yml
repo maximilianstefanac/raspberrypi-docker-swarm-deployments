@@ -1,0 +1,63 @@
+version: "3.0"
+
+services:
+  nextcloud:
+    image: nextcloud
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    networks:
+      - default
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=/run/secrets/nextcloud-stack-postgres-user
+      - POSTGRES_PASSWORD=/run/secrets/nextcloud-stack-postgres-password
+      - POSTGRES_HOST=db
+      - NEXTCLOUD_ADMIN_USER=/run/secrets/nextcloud-stack-nextcloudadmin-user
+      - NEXTCLOUD_ADMIN_PASSWORD=/run/secrets/nextcloud-stack-nextcloudadmin-password
+      - NEXTCLOUD_TRUSTED_DOMAINS=/run/secrets/nextcloud-stack-nextcloudadmin-trusted-domains
+    secrets:
+      - nextcloud-stack-postgres-user
+      - nextcloud-stack-postgres-password
+      - nextcloud-stack-nextcloudadmin-user
+      - nextcloud-stack-nextcloudadmin-password
+      - nextcloud-stack-nextcloudadmin-trusted-domains
+
+  db:
+    image: postgres:12
+    restart: always
+    networks:
+      - default
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=/run/secrets/nextcloud-stack-postgres-user
+      - POSTGRES_PASSWORD=/run/secrets/nextcloud-stack-postgres-password
+    secrets:
+    - nextcloud-stack-postgres-user
+    - nextcloud-stack-postgres-password
+
+networks:
+  default:
+    driver: overlay
+
+volumes:
+  nextcloud:
+  db:
+
+secrets:
+  nextcloud-stack-postgres-user:
+    external: true
+  nextcloud-stack-postgres-password:
+    external: true
+  nextcloud-stack-nextcloudadmin-user:
+    external: true
+  nextcloud-stack-nextcloudadmin-password:
+    external: true
+  nextcloud-stack-nextcloudadmin-trusted-domains:
+    external: true
