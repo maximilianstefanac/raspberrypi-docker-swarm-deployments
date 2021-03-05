@@ -12,20 +12,10 @@ services:
       - default
     volumes:
       - nextcloud:/var/www/html
-    environment:
-      - POSTGRES_DB=nextcloud
-      - POSTGRES_USER=/run/secrets/nextcloud-stack-postgres-user
-      - POSTGRES_PASSWORD=/run/secrets/nextcloud-stack-postgres-password
-      - POSTGRES_HOST=db
-      - NEXTCLOUD_ADMIN_USER=/run/secrets/nextcloud-stack-nextcloudadmin-user
-      - NEXTCLOUD_ADMIN_PASSWORD=/run/secrets/nextcloud-stack-nextcloudadmin-password
-      - NEXTCLOUD_TRUSTED_DOMAINS=/run/secrets/nextcloud-stack-nextcloudadmin-trusted-domains
+    env_file:
+      - ./secrets.env
     secrets:
-      - nextcloud-stack-postgres-user
-      - nextcloud-stack-postgres-password
-      - nextcloud-stack-nextcloudadmin-user
-      - nextcloud-stack-nextcloudadmin-password
-      - nextcloud-stack-nextcloudadmin-trusted-domains
+      - nextcloud-stack
 
   db:
     image: postgres:12
@@ -34,13 +24,12 @@ services:
       - default
     volumes:
       - db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=nextcloud
-      - POSTGRES_USER=/run/secrets/nextcloud-stack-postgres-user
-      - POSTGRES_PASSWORD=/run/secrets/nextcloud-stack-postgres-password
+    environment: 
+      - POSTGRES_HOST=db
+    env_file:
+      - ./secrets.env
     secrets:
-    - nextcloud-stack-postgres-user
-    - nextcloud-stack-postgres-password
+    - nextcloud-stack
 
 networks:
   default:
@@ -49,15 +38,3 @@ networks:
 volumes:
   nextcloud:
   db:
-
-secrets:
-  nextcloud-stack-postgres-user:
-    external: true
-  nextcloud-stack-postgres-password:
-    external: true
-  nextcloud-stack-nextcloudadmin-user:
-    external: true
-  nextcloud-stack-nextcloudadmin-password:
-    external: true
-  nextcloud-stack-nextcloudadmin-trusted-domains:
-    external: true
