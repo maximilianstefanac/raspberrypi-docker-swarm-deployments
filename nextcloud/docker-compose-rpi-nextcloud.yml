@@ -3,7 +3,12 @@ version: "3.8"
 services:
   nextcloud:
     image: nextcloud
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     depends_on:
       - db
     ports:
@@ -19,7 +24,12 @@ services:
 
   db:
     image: postgres:12
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     networks:
       - default
     volumes:
