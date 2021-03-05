@@ -24,8 +24,6 @@ services:
       - default
     volumes:
       - db:/var/lib/postgresql/data
-    environment: 
-      - POSTGRES_HOST=db
     env_file:
       - ./secrets.env
 
