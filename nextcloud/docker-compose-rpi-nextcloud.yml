@@ -43,4 +43,6 @@ networks:
 
 volumes:
   nextcloud:
+    driver: local
   db:
+    driver: local

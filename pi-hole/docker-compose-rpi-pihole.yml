@@ -30,4 +30,6 @@ networks:
 
 volumes:
   pihole:
+    driver: local
   dnsmasq:
+    driver: local
